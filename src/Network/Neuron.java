@@ -41,24 +41,56 @@ class InputNeuron{
 class Network{
     int score = 0;
     int[] data;
+    double[][] biases;
+    double[] weights;
     InputNeuron[] inputs;
+    Neuron[][] hiddenLayers;
+    Neuron[] outputs;
     
-    public void setVars(boolean setBiases, double[] biases, double[] weights, int input, int output, int... numPerHiddenLayer){
-        data = new int[2 + numPerHiddenLayer.length];
-        data[0] = input;
-        data[1] = output;
+    public void setVars(boolean setBiases, double[][] biases, double[] weights, int input, int output, int... numPerHiddenLayer){
+        this.data = new int[2 + numPerHiddenLayer.length];
+        this.data[0] = input;
+        this.data[1] = output;
 
         for (int i = 0; i < numPerHiddenLayer.length; i++){
             data[2+i] = numPerHiddenLayer[i];
         }
         
-        if (setBiases){
-            
+        this.inputs = new InputNeuron[input];
+        for (int i = 0; i < input; i++){
+            this.inputs[i] = new InputNeuron();
         }
-
-    }
-
-    private void setBiasesAndWeights(){
+        
+        if (setBiases){
+            this.biases = biases;
+            this.weights = weights;
+        }
+        else{
+            this.biases = new double[numPerHiddenLayer.length+1][];
+            for (int x = 0; x < numPerHiddenLayer.length; x++){
+                this.biases[x] = new double[numPerHiddenLayer[x]];
+                for (int y = 0; y < numPerHiddenLayer[x]; y++){
+                    this.biases[x][y] = RandomUtil.uniform();
+                }
+            }
+            this.biases[numPerHiddenLayer.length] = new double[output];
+            for (int z = 0; z < output; z++){
+                this.biases[numPerHiddenLayer.length][z] = RandomUtil.uniform();
+            }
+        }
+        this.hiddenLayers = new Neuron[numPerHiddenLayer.length][];
+        for (int x = 0; x < numPerHiddenLayer.length; x++){
+            this.hiddenLayers[x] = new Neuron[numPerHiddenLayer[x]];
+            for (int y = 0; y < numPerHiddenLayer[x]; y++){
+                this.hiddenLayers[x][y] = new Neuron();
+                this.hiddenLayers[x][y].setBias(this.biases[x][y]);
+            }
+        }
+        this.outputs = new Neuron[output];
+        for (int x = 0; x < output; x++){
+            this.outputs[x] = new Neuron();
+            this.outputs[x].setBias(this.biases[this.biases.length - 1][x]);
+        }
 
     }
 }
