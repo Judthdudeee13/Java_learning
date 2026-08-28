@@ -6,7 +6,7 @@ class Neuron {
     public double bias = RandomUtil.uniform();
     public double value;
 
-    public void set_bias(double bias) {
+    public void setBias(double bias) {
         this.bias = bias;
     }
 
@@ -34,5 +34,31 @@ class InputNeuron{
 
     public double send(){
         return this.value;
+    }
+}
+
+
+class Network{
+    int score = 0;
+    int[] data;
+    InputNeuron[] inputs;
+    
+    public void setVars(boolean setBiases, double[] biases, double[] weights, int input, int output, int... numPerHiddenLayer){
+        data = new int[2 + numPerHiddenLayer.length];
+        data[0] = input;
+        data[1] = output;
+
+        for (int i = 0; i < numPerHiddenLayer.length; i++){
+            data[2+i] = numPerHiddenLayer[i];
+        }
+        
+        if (setBiases){
+            
+        }
+
+    }
+
+    private void setBiasesAndWeights(){
+
     }
 }
