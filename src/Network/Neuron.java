@@ -154,16 +154,17 @@ class Network{
         return getOutput();
     }
 
-    public double[][][][] getWeightsAndBiases(){
-        double[][][][] returns = new double[2][][][];
-        double[][][] biases = new double[this.neurons.length-1][][];
+    public Object[] getWeightsAndBiases(){
+        Object[] returns = new Object[2];
+        double[][] biases = new double[this.neurons.length-1][];
         for (int layer = 1; layer <= this.neurons.length-1; layer++){
-            biases[layer] = new double[this.neurons[layer].length][];
+            biases[layer] = new double[this.neurons[layer].length];
             for (int neuron = 0; neuron < this.neurons[layer].length-1; neuron++){
                 biases[layer][neuron] = this.neurons[layer][neuron].bias;
             }
         }
         returns[0] = this.weights;
+        returns[1] = biases;
         return returns;
     }
 }
