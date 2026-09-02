@@ -2,6 +2,9 @@ package Network;
 
 import random.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 class Parent {
     Network network;
     public void setUp(boolean setUpVals, double[][][] weights, double[][] biases, int[] values){
@@ -113,4 +116,68 @@ class Specimin extends Parent{
         this.parent2 = null;
         this.data = null;
     }
+}
+
+
+class Enviroment{
+    Parent[] parents;
+    int generation;
+    int childPerParent;
+    Parent[] temParents;
+
+    public void SetUp(boolean setUpVars, int numParents, int numKids, double[][][] weights, double[][] biases, int generation, int numInputs, int numOutputs, int... numPerHiddenLayer){
+        int[] data = new int[2+numPerHiddenLayer.length];
+        data[0] = numInputs;
+        data[1] = numOutputs;
+        for (int x = 0; x < numPerHiddenLayer.length; x++){
+            data[x+2] = numPerHiddenLayer[x];
+        }
+        this.parents = new Parent[numParents];
+        for (int x = 0; x < numParents; x++){
+            this.parents[x] = new Parent();
+            this.parents[x].setUp(setUpVars, weights, biases, data);
+        }
+        this.childPerParent = numKids;
+        this.generation = generation;
+        this.temParents = new Parent[numParents/numKids];
+
+    }
+
+    public Parent[] returnParents(){
+        return this.parents;
+    }
+
+    private void killParents(){
+        Arrays.sort(this.parents, (a, b) -> Integer.compare(b.network.score, a.network.score));
+        for (int x = 0; x < this.temParents.length; x++){
+            this.temParents[x] = this.parents[x];
+        }
+    }
+
+    private void nextGeneration(){
+        Specimin[] newChildren = new Specimin[this.childPerParent*temParents.length];
+        Parent parent1 = null;
+        Parent parent2 = null;
+        int childIndex = 0;
+        ArrayList<Parent> tempParents = new ArrayList<>(Arrays.asList(this.temParents));
+        while (!tempParents.isEmpty()){
+            parent1 = RandomUtil.choice1(tempParents);
+            tempParents.remove(parent1);
+            parent2 = RandomUtil.choice1(tempParents);
+            tempParents.remove(parent2);
+            for (int x = 0; x < this.childPerParent*2; x++){
+                newChildren[childIndex] = new Specimin();
+                newChildren[childIndex].run(parent1, parent2);
+                childIndex++;
+            }
+        }
+        this.parents = newChildren;
+    }
+
+    public void evolve(){
+        killParents();
+        nextGeneration();
+        this.generation++;
+    }
+
 }

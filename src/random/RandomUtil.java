@@ -1,5 +1,6 @@
 package random;
 
+import java.util.ArrayList;
 import java.util.Random;
 public class RandomUtil{
     static Random random = new Random();
@@ -10,6 +11,10 @@ public class RandomUtil{
     public static <T> T choice(T[] list){
         int index = random.nextInt(list.length);
         return list[index];
+    }
+    public static <T> T choice1(ArrayList<T> list){
+        int index = random.nextInt(list.size());
+        return list.get(index);
     }
 
     public static int randint(int min, int max){
