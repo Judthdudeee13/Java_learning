@@ -125,7 +125,7 @@ class Enviroment{
     int childPerParent;
     Parent[] temParents;
 
-    public void SetUp(boolean setUpVars, int numParents, int numKids, double[][][] weights, double[][] biases, int generation, int numInputs, int numOutputs, int... numPerHiddenLayer){
+    public void SetUp(boolean setUpVars, int numParents, int numKids, double[][][][] weights, double[][][] biases, int generation, int numInputs, int numOutputs, int... numPerHiddenLayer){
         int[] data = new int[2+numPerHiddenLayer.length];
         data[0] = numInputs;
         data[1] = numOutputs;
@@ -135,7 +135,7 @@ class Enviroment{
         this.parents = new Parent[numParents];
         for (int x = 0; x < numParents; x++){
             this.parents[x] = new Parent();
-            this.parents[x].setUp(setUpVars, weights, biases, data);
+            this.parents[x].setUp(setUpVars, weights[x], biases[x], data);
         }
         this.childPerParent = numKids;
         this.generation = generation;
